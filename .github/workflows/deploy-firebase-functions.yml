@@ -1,0 +1,35 @@
+name: "Deploy Firebase Functions"
+on:
+  release:
+    types: published
+    paths:
+      - 'functions/**/*'
+
+jobs:
+  deploy:
+    name: "Deploy Firebase Functions"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: "Setup firebase-tools"
+        uses: w9jds/setup-firebase@main
+        with:
+          tools-version: 11.22.0
+          gcp_sa_key: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SLACK_ROTATION_APP }}
+
+      - name: "Disable husky"
+        run: npm pkg delete scripts.prepare
+        working-directory: ./functions
+
+      - name: "Install dependencies"
+        run: npm ci
+        working-directory: ./functions
+
+      - name: "Deploy to Firebase"
+        run: firebase deploy --only functions
+        working-directory: ./functions

@@ -1,0 +1,19 @@
+cloud-functions:
+  - 'functions/**/*'
+
+firestore-rules:
+  - 'firestore.rules'
+
+firestore-indexes:
+  - 'firestore.indexes.json'
+
+core:
+  - 'firebase.json'
+  - '.firebaserc'
+  - 'Makefile'
+
+documentation:
+  - '**/*.md'
+
+devops:
+  - '.github/**/*'
