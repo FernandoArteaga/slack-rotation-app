@@ -32,9 +32,8 @@ jobs:
           SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
           SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
         with:
-          input: .env.ci
-          output: .env
-        working-directory: ./functions
+          input: functions/.env.ci
+          output: functions/.env
 
       - name: "Install dependencies"
         run: npm ci
