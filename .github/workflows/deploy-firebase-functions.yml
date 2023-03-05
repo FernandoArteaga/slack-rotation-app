@@ -26,6 +26,16 @@ jobs:
         run: npm pkg delete scripts.prepare
         working-directory: ./functions
 
+      - name: "Set env file"
+        uses: danielr1996/envsubst-action@1.0.0
+        env:
+          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
+          SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
+        with:
+          input: .env.ci
+          output: .env
+        working-directory: ./functions
+
       - name: "Install dependencies"
         run: npm ci
         working-directory: ./functions
