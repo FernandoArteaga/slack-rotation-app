@@ -20,7 +20,7 @@ module.exports = {
   },
   ignorePatterns: [
     '/lib/**/*', // Ignore built files.
-    'src/blocks/**'
+    'src/views/**'
   ],
   plugins: [
     '@typescript-eslint',
@@ -29,6 +29,7 @@ module.exports = {
   rules: {
     'quotes': ['error', 'single'],
     'import/no-unresolved': 0,
-    'indent': ['error', 2],
+    'indent': ['error', 2, { 'SwitchCase': 1 }],
+    'camelcase': 'off',
   },
 };

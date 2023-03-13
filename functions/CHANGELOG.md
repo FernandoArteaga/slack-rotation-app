@@ -11,4 +11,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Cloud functions for different events (basic functionalities):
   - `app_mention`
   - `app_home_opened`
-- [Block Kit](src/blocks) directory for storing all App related blocks
+- [Block Kit](src/views) directory for storing all App related views

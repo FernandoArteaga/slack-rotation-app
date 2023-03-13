@@ -1,6 +1,6 @@
 # Cloud Functions
 
-This directory contains all the source code use for the **Doodo's Cloud functions**.
+This directory contains all the source code use for the **Slack Rotation App Cloud functions**.
 
 The **Cloud Functions** are written in `TypeScript` and located inside the `./src` directory, and organized within
 subdirectories
@@ -16,9 +16,9 @@ npm install
 ## Environment
 
 There's no need to configure an `.env` file for local development, only if you plan to manually deploy the functions, 
-**which is not recommended** since the function's deployments will be handled by the CI/CD
+**which is not recommended** since the function's deployments will be handled by the CI/CD.
 
-In case of manually deploying the functions. Copy the `.env.example` file as `.env` and configure the environment variables
+In case of manually deploying the functions. Copy the `.env.example` file as `.env` and configure the environment variables.
 
 ```bash
 cp .env.example .env
@@ -33,16 +33,17 @@ cp .env.example .env
 ## Server
 
 The function's code is loaded/watched by the **Firebase Emulator**, but since they are written in `TypeScript` we need
-to convert them first to `JavaScript`
+to transcribe them first into `JavaScript`.
 
 There 2 ways of building the code:
 
 1. Just once, useful for testing the code 👉🏻`npm build`
-2. On-change, useful for developing 👉🏻`npm run dev`
+2. On-changes, useful for developing 👉🏻`npm run dev`
 
 ## The code
 
 Inside the `./src` directory:
 
 * The `index.ts` is the application entry point, it contains all the declaration for the Cloud Functions.
-* The `blocks` directory contains all the [Block Kits](https://api.slack.com/block-kit/building) used by the Slack App
+* The `views` [directory](src/views) contains all the [Block Kits](https://api.slack.com/block-kit/building) used by the Slack App.
+* The `handlers` [directory](src/handlers) contains helpers/handlers functions who take care of specific uses cases.
