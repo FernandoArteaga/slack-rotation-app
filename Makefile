@@ -9,3 +9,6 @@ emulator-start: emulator-setup
 
 emulator-export: emulator-setup
 	firebase emulators:export -f ../data
+
+ngrok-tunnel:
+	ngrok http 9098

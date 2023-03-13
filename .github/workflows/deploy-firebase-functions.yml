@@ -22,10 +22,6 @@ jobs:
           tools-version: 11.22.0
           gcp_sa_key: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SLACK_ROTATION_APP }}
 
-      - name: "Disable husky"
-        run: npm pkg delete scripts.prepare
-        working-directory: ./functions
-
       - name: "Set env file"
         uses: danielr1996/envsubst-action@1.0.0
         env:
@@ -40,5 +36,5 @@ jobs:
         working-directory: ./functions
 
       - name: "Deploy to Firebase"
-        run: firebase deploy --only functions
+        run: firebase deploy --only functions --force
         working-directory: ./functions

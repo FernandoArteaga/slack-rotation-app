@@ -1,20 +1,25 @@
 import * as functions from 'firebase-functions';
 import { PubSub } from '@google-cloud/pubsub'
 import { WebClient } from '@slack/web-api';
-import requestValidator from './requestValidator';
-import appHome from './blocks/appHome';
+import requestValidator from './handlers/requestValidator';
+import appHome from './views/appHome';
+import blockActionsHandler from './handlers/blockActions';
+import viewSubmissionsHandler from './handlers/viewSubmissions';
 
 const REGION = 'us-east4'
-const bot = new WebClient(process.env.SLACK_TOKEN);
-const pubSubClient = new PubSub();
+export const pubSubClient = new PubSub();
+export const bot = new WebClient(process.env.SLACK_TOKEN);
 
 exports.events = functions.region(REGION).https.onRequest(async (request, response) => {
   requestValidator(request)
 
+  // For answering the challenge any time the Events URL changes
+  // const { challenge } = request.body
+  // response.send({challenge})
+
   const body = request.body
 
-  functions.logger.info(body.type)
-  functions.logger.info(body.event)
+  functions.logger.info(`Event type ${body.event.type}`, body.event)
 
   const data = JSON.stringify(request.body);
   const dataBuffer = Buffer.from(data);
@@ -24,6 +29,29 @@ exports.events = functions.region(REGION).https.onRequest(async (request, respon
     .publishMessage({data: dataBuffer});
 
   response.sendStatus(200)
+});
+
+exports.interactions = functions.region(REGION).https.onRequest(async (request, response) => {
+  requestValidator(request)
+
+  const body = request.body.payload
+  const { type, view } = JSON.parse(body);
+
+  functions.logger.info(`Interaction type --> ${type}`)
+
+  if (type === 'block_actions') {
+    const dataBuffer = Buffer.from(body);
+
+    await pubSubClient
+      .topic('block_actions')
+      .publishMessage({data: dataBuffer});
+
+    response.sendStatus(200)
+  }
+
+  if (type === 'view_submission') {
+    await viewSubmissionsHandler(response, view)
+  }
 });
 
 exports.eventAppMention = functions.region(REGION).pubsub
@@ -46,9 +74,22 @@ exports.eventAppHomeOpened = functions.region(REGION).pubsub
 
     await bot.views.publish({
       user_id: user,
-      view: {
-        type: 'home',
-        blocks: appHome
-      }
+      view: appHome
     })
+  });
+
+exports.interactionsBlockHandler = functions.region(REGION).pubsub
+  .topic('block_actions')
+  .onPublish(async (message) => {
+    const { trigger_id, actions } = message.json;
+
+    await blockActionsHandler(trigger_id, actions)
+  });
+
+exports.createShift = functions.region(REGION).pubsub
+  .topic('create_shift')
+  .onPublish(async (message) => {
+    const { trigger_id, actions } = message.json;
+
+    await blockActionsHandler(trigger_id, actions)
   });
