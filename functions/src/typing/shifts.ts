@@ -1,25 +1,36 @@
-import { BlockCheckboxOption, BlockType } from "./viewSubmissions";
+import { BlockCheckboxOption } from "./viewSubmissions";
 
 
 export interface ShiftModalValues {
-  'section-shift-name': {
-    'shift-name': {
-      type: BlockType
+  section_shift_name: {
+    shift_name: {
       value: string
     }
   }
-  'section-create-user-group': {
-    'create-user-group': {
-      type: BlockType
+  section_create_user_group: {
+    create_user_group: {
       selected_options: BlockCheckboxOption[]
+    }
+  }
+  section_rotation_users: {
+    rotation_users: {
+      selected_users: string[]
     }
   }
 }
 
 export interface ShiftModalErrors {
-  'section-shift-name'?: string
+  section_shift_name?: string
 }
 
 export interface CreateShift {
+  name: string
+  createUserGroup: boolean
+  users: string[]
+}
 
+export interface Shift {
+  name: string
+  users: string[]
+  group?: string
 }
