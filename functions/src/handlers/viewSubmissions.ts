@@ -1,7 +1,7 @@
-import { Response } from "firebase-functions";
+import { pubSubClient } from "../index";
+import { logger, Response } from "firebase-functions";
 import { ViewSubmission } from "../typing/viewSubmissions";
 import { CreateShift, ShiftModalErrors, ShiftModalValues } from "../typing/shifts";
-import { pubSubClient } from "../index";
 
 
 /**
@@ -15,7 +15,6 @@ export default async function handler(response: Response, view: ViewSubmission<a
       await createShiftValidator(response, view.state.values)
     break
   }
-
 }
 
 /**
@@ -24,8 +23,15 @@ export default async function handler(response: Response, view: ViewSubmission<a
 async function createShiftValidator(response: Response, values: ShiftModalValues) {
   const errors: ShiftModalErrors = {}
 
-  if (values['section-shift-name']['shift-name']['value'].length < 3) {
-    errors['section-shift-name'] = 'Name is too short'
+  logger.info(values)
+
+  if (values.section_shift_name.shift_name.value.length < 3) {
+    errors.section_shift_name = 'Name is too short'
+  }
+
+  const isNameValid = /^[a-zA-Z0-9\s-]*$/.test(values.section_shift_name.shift_name.value)
+  if (!isNameValid) {
+    errors.section_shift_name = 'Name should only contain letters, numbers, spaces and hyphens (-)'
   }
 
   if (Object.keys(errors).length > 0) {
@@ -34,7 +40,12 @@ async function createShiftValidator(response: Response, values: ShiftModalValues
       "errors": errors
     })
   } else {
-    const createShift: CreateShift = {}
+    const createShift: CreateShift = {
+      name: values.section_shift_name.shift_name.value,
+      createUserGroup: values.section_create_user_group.create_user_group.selected_options.length > 0,
+      users: values.section_rotation_users.rotation_users.selected_users,
+    }
+
     const data = JSON.stringify(createShift);
     const dataBuffer = Buffer.from(data);
 

@@ -30,6 +30,4 @@ export default function validate(request: Request): void {
     logger.error('Invalid request signature');
     throw new https.HttpsError('permission-denied', 'Unauthorized');
   }
-
-  return
 }

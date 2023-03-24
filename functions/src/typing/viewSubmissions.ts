@@ -9,8 +9,6 @@ export interface ViewSubmission<T> extends ModalView {
   }
 }
 
-export type BlockType = 'plain_text_input' | 'checkboxes'
-
 interface BlockCheckboxValues {
   type: string
   text: string

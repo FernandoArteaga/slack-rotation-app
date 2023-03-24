@@ -103,6 +103,7 @@ The **Firestore** indexes are handled inside the `./firestore.indexes.json` file
 Configure the following [Scopes](https://api.slack.com/scopes) for the app:
 
 * [chat:write](https://api.slack.com/scopes/chat:write)
+* [usergroups:write](https://api.slack.com/scopes/usergroups:write)
 
 ### App Home
 
